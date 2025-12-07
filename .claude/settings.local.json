@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(cat:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(del middleware.ts)",
+      "Bash(del publicplaceholder-car.jpg)",
+      "Bash(cd:*)",
+      "Bash(cmd /c \"move page.tsx (public)\\page.tsx && move vehiculos (public)\\vehiculos\")",
+      "Bash(powershell -Command \"Move-Item -Path ''page.tsx'' -Destination ''(public)\\page.tsx''; Move-Item -Path ''vehiculos'' -Destination ''(public)\\vehiculos''\")",
+      "Bash(dir:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
