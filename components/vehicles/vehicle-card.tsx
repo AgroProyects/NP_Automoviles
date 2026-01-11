@@ -1,39 +1,18 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Vehicle } from '@/lib/types';
 import { formatPrice, formatKilometers, getVehicleSlug } from '@/lib/utils';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { Calendar, Gauge, Fuel, Settings, Award, Car, ImageIcon, ArrowRight, Sparkles } from 'lucide-react';
+import { Calendar, Gauge, Fuel, Settings, Award, Car, ImageIcon, ArrowRight } from 'lucide-react';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
-}
-
-// Helper function to check if vehicle is recent (less than 7 days old)
-function isRecent(dateString: string): boolean {
-  const createdDate = new Date(dateString);
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  sevenDaysAgo.setHours(0, 0, 0, 0);
-  return createdDate >= sevenDaysAgo;
 }
 
 export function VehicleCard({ vehicle }: VehicleCardProps) {
   const primaryImage = vehicle.images?.find((img) => img.is_primary);
   const imageUrl = primaryImage?.url || vehicle.images?.[0]?.url;
   const slug = getVehicleSlug(vehicle);
-
-  // Use state to avoid hydration mismatch with date calculations
-  const [vehicleIsRecent, setVehicleIsRecent] = useState(false);
-
-  useEffect(() => {
-    if (vehicle.created_at) {
-      setVehicleIsRecent(isRecent(vehicle.created_at));
-    }
-  }, [vehicle.created_at]);
 
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border-0 bg-white">
@@ -55,16 +34,6 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
               <div className="text-center">
                 <Car className="h-16 w-16 text-gray-400 mx-auto mb-2" />
                 <span className="text-gray-500 text-sm font-medium">Imagen próximamente</span>
-              </div>
-            </div>
-          )}
-
-          {/* Recently added badge */}
-          {vehicleIsRecent && (
-            <div className="absolute left-3 top-3 z-20 animate-in slide-in-from-left duration-300">
-              <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-green-500 to-green-600 px-3 py-1.5 shadow-lg">
-                <Sparkles className="h-3.5 w-3.5 text-white" />
-                <span className="text-xs font-bold text-white">Recién llegado</span>
               </div>
             </div>
           )}
