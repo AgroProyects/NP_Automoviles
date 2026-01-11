@@ -19,7 +19,7 @@ import {
   TRANSMISION_OPTIONS,
 } from '@/lib/types';
 import { getVehicleSlug } from '@/lib/utils';
-import { Save, X, Star, ImagePlus, ArrowLeft, ExternalLink, DollarSign } from 'lucide-react';
+import { Save, X, Star, ImagePlus, ArrowLeft, ExternalLink, DollarSign, Video, Play } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ToastContainer } from '@/components/ui/toast';
@@ -225,13 +225,13 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
 
       if (uploadedCount > 0) {
         showToast(
-          `${uploadedCount} ${uploadedCount === 1 ? 'imagen subida' : 'imágenes subidas'} correctamente`,
+          `${uploadedCount} ${uploadedCount === 1 ? 'archivo subido' : 'archivos subidos'} correctamente`,
           'success'
         );
       }
     } catch (error) {
-      console.error('Error uploading images:', error);
-      showToast('Error al subir imágenes', 'error');
+      console.error('Error uploading files:', error);
+      showToast('Error al subir archivos', 'error');
     } finally {
       setUploading(false);
     }
@@ -592,12 +592,12 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                   {/* Upload Section */}
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50">
                     <Label htmlFor="images" className="text-gray-900 font-bold text-sm mb-3 block">
-                      Subir Imágenes
+                      Subir Imágenes y Videos
                     </Label>
                     <Input
                       id="images"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/webp,video/mp4,video/webm,video/quicktime,video/mov"
                       multiple
                       onChange={handleImageUpload}
                       disabled={uploading}
@@ -606,19 +606,20 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                     {uploading && (
                       <div className="mt-4 flex items-center text-[#044bab]">
                         <div className="animate-spin mr-2 h-4 w-4 border-2 border-[#044bab] border-t-transparent rounded-full"></div>
-                        <p className="text-sm font-semibold">Subiendo imágenes...</p>
+                        <p className="text-sm font-semibold">Subiendo archivos...</p>
                       </div>
                     )}
                     <p className="mt-3 text-sm text-gray-600">
-                      Formatos aceptados: JPG, PNG, WEBP. Tamaño máximo: 5MB por imagen.
+                      <strong>Imágenes:</strong> JPG, PNG, WEBP (máx. 5MB) | <strong>Videos:</strong> MP4, WEBM, MOV (máx. 100MB)
                     </p>
                   </div>
 
-                  {/* Images Grid */}
+                  {/* Images/Videos Grid */}
                   {images.length > 0 ? (
                     <div>
                       <p className="text-sm font-bold text-gray-900 mb-4">
-                        {images.length} imagen{images.length !== 1 ? 'es' : ''} cargada{images.length !== 1 ? 's' : ''}
+                        {images.length} archivo{images.length !== 1 ? 's' : ''} cargado{images.length !== 1 ? 's' : ''}
+                        {' '}({images.filter(i => i.media_type === 'video').length} video{images.filter(i => i.media_type === 'video').length !== 1 ? 's' : ''}, {images.filter(i => i.media_type !== 'video').length} imagen{images.filter(i => i.media_type !== 'video').length !== 1 ? 'es' : ''})
                       </p>
                       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
                         {images.map((image) => (
@@ -626,12 +627,36 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                             key={image.id}
                             className="group relative aspect-square overflow-hidden rounded-lg border-2 border-gray-200 hover:border-[#044bab] transition-all"
                           >
-                            <Image
-                              src={image.url}
-                              alt="Vehicle image"
-                              fill
-                              className="object-cover"
-                            />
+                            {image.media_type === 'video' ? (
+                              <div className="relative w-full h-full bg-gray-900">
+                                <video
+                                  src={image.url}
+                                  className="w-full h-full object-cover"
+                                  muted
+                                  playsInline
+                                  preload="metadata"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                  <div className="bg-black/60 rounded-full p-3">
+                                    <Play className="h-6 w-6 text-white fill-white" />
+                                  </div>
+                                </div>
+                                {/* Video Badge */}
+                                <div className="absolute right-2 top-2 bg-purple-600 rounded-full px-2 py-1 shadow-lg">
+                                  <div className="flex items-center gap-1">
+                                    <Video className="h-3 w-3 text-white" />
+                                    <span className="text-xs font-bold text-white">Video</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <Image
+                                src={image.url}
+                                alt="Vehicle image"
+                                fill
+                                className="object-cover"
+                              />
+                            )}
 
                             {/* Primary Badge */}
                             {image.is_primary && (
@@ -645,7 +670,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
 
                             {/* Action Buttons */}
                             <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                              {!image.is_primary && (
+                              {!image.is_primary && image.media_type !== 'video' && (
                                 <button
                                   type="button"
                                   onClick={() => handleSetPrimaryImage(image.id)}
@@ -659,7 +684,7 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                                 type="button"
                                 onClick={() => openDeleteModal(image.id)}
                                 className="bg-red-600 hover:bg-red-700 text-white rounded-full p-2 shadow-lg transition-all"
-                                title="Eliminar imagen"
+                                title="Eliminar"
                               >
                                 <X className="h-4 w-4" />
                               </button>
@@ -671,8 +696,8 @@ export function VehicleForm({ vehicle }: VehicleFormProps) {
                   ) : (
                     <div className="text-center py-8 text-gray-500">
                       <ImagePlus className="h-12 w-12 mx-auto mb-3 text-gray-400" />
-                      <p className="font-semibold">No hay imágenes cargadas</p>
-                      <p className="text-sm">Sube imágenes del vehículo para mostrarlo en el catálogo</p>
+                      <p className="font-semibold">No hay archivos cargados</p>
+                      <p className="text-sm">Sube imágenes y videos del vehículo para mostrarlo en el catálogo</p>
                     </div>
                   )}
                 </div>

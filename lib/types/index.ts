@@ -22,8 +22,14 @@ export interface VehicleImage {
   url: string;
   is_primary: boolean;
   display_order: number;
+  media_type: 'image' | 'video';
   created_at: string;
 }
+
+export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'] as const;
+export const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/webm', 'video/quicktime', 'video/mov'] as const;
+export const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+export const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 
 export interface VehicleFormData {
   marca: string;

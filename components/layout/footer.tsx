@@ -13,8 +13,8 @@ export function Footer() {
               NP Automóviles
             </h3>
             <p className="text-sm text-gray-600">
-              Tu concesionaria de confianza. Vehículos seleccionados con la
-              mejor calidad y garantía.
+              Compra y venta de vehículos usados. Atención personalizada y
+              financiamiento disponible.
             </p>
           </div>
 

@@ -24,13 +24,14 @@ CREATE TABLE IF NOT EXISTS public.vehicles (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Vehicle images table
+-- Vehicle images/videos table
 CREATE TABLE IF NOT EXISTS public.vehicle_images (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   vehicle_id UUID NOT NULL REFERENCES public.vehicles(id) ON DELETE CASCADE,
   url TEXT NOT NULL,
   is_primary BOOLEAN DEFAULT false,
   display_order INTEGER DEFAULT 0,
+  media_type VARCHAR(10) DEFAULT 'image' CHECK (media_type IN ('image', 'video')),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 

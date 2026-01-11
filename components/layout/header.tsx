@@ -61,14 +61,21 @@ export function Header() {
           </nav>
 
           {/* Acciones Desktop */}
-          <div className="hidden lg:flex items-center gap-4">
-            {/* Botón de Contacto */}
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Botones de Contacto */}
             <a
               href="tel:+59898181869"
-              className="inline-flex h-11 items-center gap-2 justify-center rounded-lg bg-white px-5 text-sm font-semibold text-primary transition-all duration-200 hover:bg-white/95 hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+              className="inline-flex h-10 items-center gap-2 justify-center rounded-lg bg-white px-4 text-sm font-semibold text-primary transition-all duration-200 hover:bg-white/95 hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
             >
               <Phone className="h-4 w-4" />
               <span>098 181 869</span>
+            </a>
+            <a
+              href="tel:+59899465511"
+              className="inline-flex h-10 items-center gap-2 justify-center rounded-lg bg-white px-4 text-sm font-semibold text-primary transition-all duration-200 hover:bg-white/95 hover:scale-105 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+            >
+              <Phone className="h-4 w-4" />
+              <span>099 465 511</span>
             </a>
 
             {/* Icono de Admin */}
@@ -156,6 +163,13 @@ export function Header() {
             >
               <Phone className="h-5 w-5" />
               <span>098 181 869</span>
+            </a>
+            <a
+              href="tel:+59899465511"
+              className="flex items-center gap-2 px-4 py-3 text-base font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <Phone className="h-5 w-5" />
+              <span>099 465 511</span>
             </a>
             {!session && (
               <Link

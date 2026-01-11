@@ -31,20 +31,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file type
-    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    // Validate file type (images and videos)
+    const validImageTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const validVideoTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/mov'];
+    const validTypes = [...validImageTypes, ...validVideoTypes];
+    const isVideo = validVideoTypes.includes(file.type);
+
     if (!validTypes.includes(file.type)) {
       return NextResponse.json(
-        { success: false, error: 'Tipo de archivo no válido. Solo se permiten JPG, PNG y WEBP' },
+        { success: false, error: 'Tipo de archivo no válido. Se permiten: JPG, PNG, WEBP, MP4, WEBM, MOV' },
         { status: 400 }
       );
     }
 
-    // Validate file size (5MB max)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (5MB for images, 100MB for videos)
+    const maxImageSize = 5 * 1024 * 1024; // 5MB
+    const maxVideoSize = 100 * 1024 * 1024; // 100MB
+    const maxSize = isVideo ? maxVideoSize : maxImageSize;
+
     if (file.size > maxSize) {
       return NextResponse.json(
-        { success: false, error: 'El archivo es demasiado grande. Tamaño máximo: 5MB' },
+        { success: false, error: `El archivo es demasiado grande. Tamaño máximo: ${isVideo ? '100MB' : '5MB'}` },
         { status: 400 }
       );
     }
@@ -87,7 +94,7 @@ export async function POST(request: NextRequest) {
         .eq('vehicle_id', vehicleId);
     }
 
-    // Save image record to database
+    // Save media record to database
     const { data: imageRecord, error: dbError } = await supabaseAdmin
       .from('vehicle_images')
       .insert({
@@ -95,6 +102,7 @@ export async function POST(request: NextRequest) {
         url: publicUrl,
         is_primary: isPrimary,
         display_order: displayOrder,
+        media_type: isVideo ? 'video' : 'image',
       })
       .select()
       .single();

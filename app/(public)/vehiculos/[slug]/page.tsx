@@ -17,13 +17,26 @@ import {
   Settings,
   Palette,
   ArrowLeft,
-  MessageCircle,
   Phone,
   CheckCircle2,
   Shield,
   Award,
   MapPin,
 } from 'lucide-react';
+
+// WhatsApp Logo SVG Component
+function WhatsAppLogo({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 32 32"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+    >
+      <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 7.933-2.127c2.42 1.37 5.173 2.127 8.067 2.127 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-5.253 1.408 1.417-5.228-0.321-0.519c-1.351-2.2-2.067-4.737-2.067-7.365 0-7.692 6.275-13.967 13.967-13.967s13.967 6.275 13.967 13.967-6.275 13.967-13.967 13.967zM21.617 19.671c-0.38-0.19-2.243-1.106-2.592-1.232-0.348-0.127-0.602-0.19-0.854 0.19s-0.981 1.232-1.203 1.485c-0.221 0.253-0.443 0.285-0.822 0.095s-1.603-0.591-3.052-1.884c-1.129-1.006-1.89-2.249-2.112-2.628s-0.024-0.584 0.166-0.773c0.171-0.171 0.38-0.443 0.57-0.665s0.253-0.38 0.38-0.633c0.127-0.253 0.063-0.475-0.032-0.665s-0.854-2.056-1.171-2.816c-0.31-0.741-0.623-0.641-0.854-0.653-0.221-0.011-0.475-0.013-0.728-0.013s-0.665 0.095-1.013 0.475c-0.348 0.38-1.329 1.298-1.329 3.166s1.361 3.67 1.551 3.924c0.19 0.253 2.678 4.091 6.489 5.738 0.907 0.392 1.616 0.626 2.168 0.802 0.912 0.289 1.741 0.249 2.396 0.151 0.731-0.109 2.243-0.917 2.561-1.803s0.317-1.645 0.222-1.803c-0.095-0.158-0.348-0.253-0.728-0.443z"/>
+    </svg>
+  );
+}
 
 async function getVehicle(slug: string): Promise<Vehicle | null> {
   const idPrefix = parseVehicleSlug(slug);
@@ -122,8 +135,8 @@ export default async function VehiculoDetailPage({
   const features = [
     'Documentación al día',
     'Verificación policial',
-    'Service reciente',
-    'Garantía disponible',
+    'Buen trato',
+    'Financiamiento por banco',
   ];
 
   return (
@@ -342,18 +355,18 @@ export default async function VehiculoDetailPage({
                     href={whatsappLinkNestor}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-green-600 px-4 text-sm font-bold text-white transition-all hover:bg-green-700 hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="group w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white transition-all hover:bg-[#128C7E] hover:shadow-lg hover:scale-105 active:scale-95"
                   >
-                    <MessageCircle className="h-4 w-4 group-hover:rotate-12 transition-transform" />
+                    <WhatsAppLogo className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     Néstor - 098 181 869
                   </a>
                   <a
                     href={whatsappLinkEmanuel}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-green-600 px-4 text-sm font-bold text-white transition-all hover:bg-green-700 hover:shadow-lg hover:scale-105 active:scale-95"
+                    className="group w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-[#25D366] px-4 text-sm font-bold text-white transition-all hover:bg-[#128C7E] hover:shadow-lg hover:scale-105 active:scale-95"
                   >
-                    <MessageCircle className="h-4 w-4 group-hover:rotate-12 transition-transform" />
+                    <WhatsAppLogo className="h-5 w-5 group-hover:scale-110 transition-transform" />
                     Emanuel - 099 465 511
                   </a>
                 </div>
@@ -364,14 +377,14 @@ export default async function VehiculoDetailPage({
                     className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-white border-2 border-[#044bab] px-4 text-sm font-bold text-[#044bab] transition-all hover:bg-[#044bab] hover:text-white hover:shadow-lg"
                   >
                     <Phone className="h-4 w-4" />
-                    Llamar N
+                    Néstor
                   </a>
                   <a
                     href="tel:+59899465511"
                     className="w-full flex items-center justify-center gap-2 h-12 rounded-xl bg-white border-2 border-[#044bab] px-4 text-sm font-bold text-[#044bab] transition-all hover:bg-[#044bab] hover:text-white hover:shadow-lg"
                   >
                     <Phone className="h-4 w-4" />
-                    Llamar E
+                    Emanuel
                   </a>
                 </div>
 
@@ -397,18 +410,18 @@ export default async function VehiculoDetailPage({
                     href={whatsappLinkNestor}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full flex flex-col items-center justify-center gap-1 h-14 rounded-lg bg-green-600 px-2 text-white transition-all hover:bg-green-700 active:scale-95 shadow-md"
+                    className="group w-full flex flex-col items-center justify-center gap-1 h-14 rounded-lg bg-[#25D366] px-2 text-white transition-all hover:bg-[#128C7E] active:scale-95 shadow-md"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <WhatsAppLogo className="h-5 w-5" />
                     <span className="text-xs font-bold">Néstor</span>
                   </a>
                   <a
                     href={whatsappLinkEmanuel}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group w-full flex flex-col items-center justify-center gap-1 h-14 rounded-lg bg-green-600 px-2 text-white transition-all hover:bg-green-700 active:scale-95 shadow-md"
+                    className="group w-full flex flex-col items-center justify-center gap-1 h-14 rounded-lg bg-[#25D366] px-2 text-white transition-all hover:bg-[#128C7E] active:scale-95 shadow-md"
                   >
-                    <MessageCircle className="h-4 w-4" />
+                    <WhatsAppLogo className="h-5 w-5" />
                     <span className="text-xs font-bold">Emanuel</span>
                   </a>
                 </div>
@@ -419,14 +432,14 @@ export default async function VehiculoDetailPage({
                     className="w-full flex items-center justify-center gap-1 h-10 rounded-lg bg-white border-2 border-[#044bab] px-2 text-xs font-bold text-[#044bab] transition-all hover:bg-[#044bab] hover:text-white shadow-md"
                   >
                     <Phone className="h-3 w-3" />
-                    Llamar N
+                    Néstor
                   </a>
                   <a
                     href="tel:+59899465511"
                     className="w-full flex items-center justify-center gap-1 h-10 rounded-lg bg-white border-2 border-[#044bab] px-2 text-xs font-bold text-[#044bab] transition-all hover:bg-[#044bab] hover:text-white shadow-md"
                   >
                     <Phone className="h-3 w-3" />
-                    Llamar E
+                    Emanuel
                   </a>
                 </div>
 
