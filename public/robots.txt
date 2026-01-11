@@ -1,0 +1,20 @@
+# Robots.txt para NP Automóviles
+# https://npautomoviles.com.uy
+
+User-agent: *
+Allow: /
+
+# Permitir acceso a todas las páginas públicas
+Allow: /vehiculos/
+Allow: /vehiculos/*
+
+# Bloquear páginas de administración
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://npautomoviles.com.uy/sitemap.xml
+
+# Crawl-delay para no sobrecargar el servidor
+Crawl-delay: 1

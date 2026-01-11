@@ -24,19 +24,27 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-primary/20 bg-primary shadow-lg">
+    <>
+      {/* Skip to content link for accessibility */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-6 focus:py-3 focus:bg-primary focus:text-white focus:rounded-lg focus:shadow-xl focus:font-semibold"
+      >
+        Saltar al contenido principal
+      </a>
+    <header className="sticky top-0 z-50 w-full bg-gradient-to-r from-primary via-primary to-primary-dark shadow-xl">
       <div className="container mx-auto px-4">
         {/* Header Principal */}
-        <div className="flex h-20 items-center justify-between">
+        <div className="flex h-24 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
+          <Link href="/" className="flex items-center gap-4 group">
             <div className="relative overflow-hidden transition-all duration-300 group-hover:scale-105">
               <Image
                 src="/npLogo.jpg"
                 alt="NP Automóviles"
-                width={180}
-                height={60}
-                className="h-16 w-auto object-contain"
+                width={220}
+                height={80}
+                className="h-16 md:h-20 w-auto object-contain"
                 priority
               />
             </div>
@@ -207,5 +215,6 @@ export function Header() {
         )}
       </div>
     </header>
+    </>
   );
 }

@@ -16,13 +16,19 @@ import {
   Fuel,
   Settings,
   Palette,
-  ArrowLeft,
   Phone,
   CheckCircle2,
   Shield,
   Award,
   MapPin,
+  ChevronRight,
+  Users,
+  Clock,
+  Eye,
+  TrendingUp,
+  Sparkles,
 } from 'lucide-react';
+import { VehicleCard } from '@/components/vehicles/vehicle-card';
 
 // WhatsApp Logo SVG Component
 function WhatsAppLogo({ className = "h-5 w-5" }: { className?: string }) {
@@ -36,6 +42,42 @@ function WhatsAppLogo({ className = "h-5 w-5" }: { className?: string }) {
       <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825 0.737 5.607 2.137 8.048l-2.137 7.952 7.933-2.127c2.42 1.37 5.173 2.127 8.067 2.127 8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 29.467c-2.482 0-4.908-0.646-7.07-1.87l-0.507-0.292-5.253 1.408 1.417-5.228-0.321-0.519c-1.351-2.2-2.067-4.737-2.067-7.365 0-7.692 6.275-13.967 13.967-13.967s13.967 6.275 13.967 13.967-6.275 13.967-13.967 13.967zM21.617 19.671c-0.38-0.19-2.243-1.106-2.592-1.232-0.348-0.127-0.602-0.19-0.854 0.19s-0.981 1.232-1.203 1.485c-0.221 0.253-0.443 0.285-0.822 0.095s-1.603-0.591-3.052-1.884c-1.129-1.006-1.89-2.249-2.112-2.628s-0.024-0.584 0.166-0.773c0.171-0.171 0.38-0.443 0.57-0.665s0.253-0.38 0.38-0.633c0.127-0.253 0.063-0.475-0.032-0.665s-0.854-2.056-1.171-2.816c-0.31-0.741-0.623-0.641-0.854-0.653-0.221-0.011-0.475-0.013-0.728-0.013s-0.665 0.095-1.013 0.475c-0.348 0.38-1.329 1.298-1.329 3.166s1.361 3.67 1.551 3.924c0.19 0.253 2.678 4.091 6.489 5.738 0.907 0.392 1.616 0.626 2.168 0.802 0.912 0.289 1.741 0.249 2.396 0.151 0.731-0.109 2.243-0.917 2.561-1.803s0.317-1.645 0.222-1.803c-0.095-0.158-0.348-0.253-0.728-0.443z"/>
     </svg>
   );
+}
+
+async function getRelatedVehicles(currentVehicleId: string, marca: string): Promise<Vehicle[]> {
+  const supabase = await createClient();
+
+  // First try to get vehicles of the same brand
+  const { data: sameBrandVehicles, error: brandError } = await supabase
+    .from('vehicles')
+    .select(`
+      *,
+      images:vehicle_images(*)
+    `)
+    .eq('marca', marca)
+    .neq('id', currentVehicleId)
+    .limit(3);
+
+  if (!brandError && sameBrandVehicles && sameBrandVehicles.length >= 3) {
+    return sameBrandVehicles;
+  }
+
+  // If not enough, get any other vehicles
+  const { data: otherVehicles, error: otherError } = await supabase
+    .from('vehicles')
+    .select(`
+      *,
+      images:vehicle_images(*)
+    `)
+    .neq('id', currentVehicleId)
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (otherError || !otherVehicles) {
+    return sameBrandVehicles || [];
+  }
+
+  return otherVehicles;
 }
 
 async function getVehicle(slug: string): Promise<Vehicle | null> {
@@ -118,6 +160,8 @@ export default async function VehiculoDetailPage({
     notFound();
   }
 
+  const relatedVehicles = await getRelatedVehicles(vehicle.id, vehicle.marca);
+
   const whatsappLinkNestor = getWhatsAppLink(
     vehicle.marca,
     vehicle.modelo,
@@ -141,16 +185,22 @@ export default async function VehiculoDetailPage({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
-      {/* Breadcrumb / Back Navigation */}
-      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 md:top-16 z-10">
-        <div className="container mx-auto px-4 py-3 md:py-4">
-          <Link
-            href="/vehiculos"
-            className="inline-flex items-center gap-2 text-sm md:text-base font-medium text-gray-600 hover:text-[#044bab] transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Volver al catálogo
-          </Link>
+      {/* Breadcrumb Navigation */}
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-sm sticky top-0 md:top-20 z-10">
+        <div className="container mx-auto px-4 py-3">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm">
+            <Link href="/" className="text-gray-600 hover:text-primary transition-colors">
+              Inicio
+            </Link>
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <Link href="/vehiculos" className="text-gray-600 hover:text-primary transition-colors">
+              Vehículos
+            </Link>
+            <ChevronRight className="h-4 w-4 text-gray-400" />
+            <span className="text-gray-900 font-semibold line-clamp-1">
+              {vehicle.marca} {vehicle.modelo} {vehicle.anio}
+            </span>
+          </nav>
         </div>
       </div>
 
@@ -452,6 +502,59 @@ export default async function VehiculoDetailPage({
               </div>
             </div>
 
+            {/* Social Proof & Trust Section */}
+            <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg p-5 lg:p-6">
+              <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                ¿Por qué confiar en nosotros?
+              </h3>
+
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 shrink-0">
+                    <CheckCircle2 className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">+200 clientes satisfechos</p>
+                    <p className="text-xs text-gray-600">en Nueva Helvecia y alrededores</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-500 shrink-0">
+                    <Clock className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Respuesta en menos de 1 hora</p>
+                    <p className="text-xs text-gray-600">de lunes a sábados</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-yellow-500 shrink-0">
+                    <Shield className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">Garantía de documentación</p>
+                    <p className="text-xs text-gray-600">100% verificada y al día</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* View Counter - FOMO */}
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-4 border border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Eye className="h-4 w-4 text-gray-600" />
+                  <span className="text-sm text-gray-700">
+                    <span className="font-bold text-gray-900">12 personas</span> vieron este vehículo hoy
+                  </span>
+                </div>
+                <TrendingUp className="h-4 w-4 text-green-600" />
+              </div>
+            </div>
+
             {/* Trust Badge */}
             <div className="bg-white rounded-xl lg:rounded-2xl shadow-lg p-5 lg:p-6 text-center">
               <Shield className="h-10 w-10 lg:h-12 lg:w-12 text-[#044bab] mx-auto mb-3" />
@@ -463,6 +566,73 @@ export default async function VehiculoDetailPage({
           </div>
         </div>
       </div>
+
+      {/* Related Vehicles Section */}
+      {relatedVehicles.length > 0 && (
+        <section className="border-t border-gray-200 bg-gray-50 py-12 md:py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-6 md:mb-8 flex items-center gap-2">
+              <Sparkles className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+              También te puede interesar
+            </h2>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedVehicles.map((relatedVehicle) => (
+                <VehicleCard key={relatedVehicle.id} vehicle={relatedVehicle} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Mobile: Sticky Bottom Contact Bar */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-gray-200 shadow-2xl p-3 animate-in slide-in-from-bottom duration-300">
+        <div className="container mx-auto">
+          {/* Primary action - WhatsApp */}
+          <div className="grid grid-cols-2 gap-2 mb-2">
+            <a
+              href={whatsappLinkNestor}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center gap-1 h-14 rounded-xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white shadow-lg active:scale-95 transition-transform"
+            >
+              <WhatsAppLogo className="h-5 w-5" />
+              <span className="text-xs font-bold">Chat Néstor</span>
+            </a>
+            <a
+              href={whatsappLinkEmanuel}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center gap-1 h-14 rounded-xl bg-gradient-to-br from-[#25D366] to-[#128C7E] text-white shadow-lg active:scale-95 transition-transform"
+            >
+              <WhatsAppLogo className="h-5 w-5" />
+              <span className="text-xs font-bold">Chat Emanuel</span>
+            </a>
+          </div>
+
+          {/* Secondary actions */}
+          <div className="grid grid-cols-3 gap-2">
+            <a
+              href="tel:+59898181869"
+              className="flex items-center justify-center gap-1 h-10 rounded-lg bg-white border-2 border-primary text-primary text-xs font-bold active:scale-95 transition-transform"
+            >
+              <Phone className="h-3.5 w-3.5" />
+              Néstor
+            </a>
+            <a
+              href="tel:+59899465511"
+              className="flex items-center justify-center gap-1 h-10 rounded-lg bg-white border-2 border-primary text-primary text-xs font-bold active:scale-95 transition-transform"
+            >
+              <Phone className="h-3.5 w-3.5" />
+              Emanuel
+            </a>
+            <CopyLinkButton className="h-10 border-2 border-gray-300 hover:bg-gray-50 font-semibold text-xs" />
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom padding for mobile sticky bar */}
+      <div className="lg:hidden h-32" />
     </div>
   );
 }

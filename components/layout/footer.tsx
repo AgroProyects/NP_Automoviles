@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Phone, MapPin, Shield, Award, Clock } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -79,7 +79,36 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
+        {/* Trust Badges Section */}
+        <div className="mt-8 mb-8 border-t border-gray-200 pt-8">
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-8">
+            <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
+              <Shield className="h-8 w-8 text-green-600" />
+              <div>
+                <p className="font-bold text-gray-900 text-sm">Documentación Verificada</p>
+                <p className="text-xs text-gray-600">100% garantizada</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
+              <Award className="h-8 w-8 text-blue-600" />
+              <div>
+                <p className="font-bold text-gray-900 text-sm">+200 Clientes</p>
+                <p className="text-xs text-gray-600">Satisfechos</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
+              <Clock className="h-8 w-8 text-purple-600" />
+              <div>
+                <p className="font-bold text-gray-900 text-sm">Respuesta Rápida</p>
+                <p className="text-xs text-gray-600">En menos de 1 hora</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 pt-8 text-center text-sm text-gray-600">
           <p className="mb-2">
             &copy; {currentYear} NP Automóviles. Todos los derechos reservados.
           </p>
